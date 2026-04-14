@@ -184,6 +184,7 @@
       justify-content: space-between;
       gap: 2rem;
       min-width: 0;
+      position: relative;
     }
 
     .eyebrow {
@@ -283,6 +284,106 @@
       overflow: hidden;
     }
 
+    .hero-hearts {
+      position: absolute;
+      left: 31%;
+      bottom: 176px;
+      width: 240px;
+      height: 180px;
+      pointer-events: none;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    .heart-core {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      width: 28px;
+      height: 28px;
+      background: #d44d5c;
+      transform: rotate(-45deg);
+      border-radius: 4px;
+      box-shadow: 0 0 24px rgba(212, 77, 92, 0.35);
+      animation: heartPulse 2.6s ease-in-out infinite;
+    }
+
+    .heart-core::before,
+    .heart-core::after,
+    .mini-heart::before,
+    .mini-heart::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      border-radius: 50%;
+    }
+
+    .heart-core::before,
+    .mini-heart::before {
+      top: -50%;
+      left: 0;
+    }
+
+    .heart-core::after,
+    .mini-heart::after {
+      left: 50%;
+      top: 0;
+    }
+
+    .mini-heart {
+      position: absolute;
+      left: 50%;
+      bottom: 28px;
+      width: 12px;
+      height: 12px;
+      background: #cf4052;
+      transform: rotate(-45deg);
+      opacity: 0;
+      filter: drop-shadow(0 6px 12px rgba(207, 64, 82, 0.22));
+      animation: heartBurst 4.8s ease-out infinite;
+    }
+
+    .mini-heart.h2 {
+      animation-delay: 0.4s;
+      background: #e25769;
+    }
+
+    .mini-heart.h3 {
+      animation-delay: 0.8s;
+      width: 10px;
+      height: 10px;
+    }
+
+    .mini-heart.h4 {
+      animation-delay: 1.2s;
+      width: 9px;
+      height: 9px;
+      background: #c73649;
+    }
+
+    .mini-heart.h5 {
+      animation-delay: 1.6s;
+    }
+
+    .mini-heart.h6 {
+      animation-delay: 2s;
+      width: 8px;
+      height: 8px;
+      background: #eb6c7b;
+    }
+
+    .mini-heart.h7 {
+      animation-delay: 2.4s;
+    }
+
+    .mini-heart.h8 {
+      animation-delay: 2.8s;
+      width: 10px;
+      height: 10px;
+    }
+
     .hero-panel::before {
       content: "";
       position: absolute;
@@ -334,6 +435,36 @@
       font-size: 2.4rem;
       font-family: "Cormorant Garamond", Georgia, serif;
       line-height: 1;
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .countdown-unit {
+      padding: 12px 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      text-align: center;
+    }
+
+    .countdown-number {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    .countdown-unit-label {
+      margin-top: 6px;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .countdown-sub {
@@ -528,6 +659,37 @@
       transform: translateY(0);
     }
 
+    @keyframes heartPulse {
+      0%,
+      100% {
+        transform: rotate(-45deg) scale(1);
+      }
+
+      50% {
+        transform: rotate(-45deg) scale(1.14);
+      }
+    }
+
+    @keyframes heartBurst {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) rotate(-45deg) scale(0.2);
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      75% {
+        opacity: 0.92;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(var(--heart-x), var(--heart-y)) rotate(-45deg) scale(1.2);
+      }
+    }
+
     @media (max-width: 980px) {
       .hero-grid,
       .section-grid {
@@ -576,6 +738,19 @@
       .timeline-time {
         min-width: 0;
       }
+
+      .countdown-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-hearts {
+        left: 31%;
+        bottom: 176px;
+        width: 190px;
+        height: 150px;
+        transform: translateX(-50%) scale(0.86);
+        transform-origin: center bottom;
+      }
     }
   </style>
 </head>
@@ -587,7 +762,7 @@
           <span class="brand-mark">JN</span>
           <span>Wedding Invitation</span>
         </div>
-        <div class="nav-note">Kerala Christian Wedding • May 14 • 10:30 AM</div>
+        <div class="nav-note">May 14 • 10:30 AM</div>
       </div>
 
       <section class="hero-card">
@@ -613,7 +788,7 @@
               </article>
               <article class="fact-card">
                 <div class="fact-label">Style</div>
-                <div class="fact-value">Elegant, simple, and modern</div>
+                <div class="fact-value">A warm celebration with family, prayer, and joy</div>
               </article>
             </div>
           </div>
@@ -628,6 +803,24 @@
             <div class="countdown">
               <div class="countdown-label">Until The Celebration</div>
               <div class="countdown-value" id="countdownDays">--</div>
+              <div class="countdown-grid">
+                <div class="countdown-unit">
+                  <div class="countdown-number" id="countdownDayNumber">--</div>
+                  <div class="countdown-unit-label">Days</div>
+                </div>
+                <div class="countdown-unit">
+                  <div class="countdown-number" id="countdownHourNumber">--</div>
+                  <div class="countdown-unit-label">Hours</div>
+                </div>
+                <div class="countdown-unit">
+                  <div class="countdown-number" id="countdownMinuteNumber">--</div>
+                  <div class="countdown-unit-label">Minutes</div>
+                </div>
+                <div class="countdown-unit">
+                  <div class="countdown-number" id="countdownSecondNumber">--</div>
+                  <div class="countdown-unit-label">Seconds</div>
+                </div>
+              </div>
               <div class="countdown-sub" id="countdownText">Preparing the day with love.</div>
             </div>
 
@@ -635,7 +828,19 @@
               “Love is patient, love is kind.”<br>
               Join us as we exchange vows and celebrate this blessed union.
             </p>
+
           </aside>
+        </div>
+        <div class="hero-hearts" aria-hidden="true">
+          <span class="heart-core"></span>
+          <span class="mini-heart h1" style="--heart-x: -18px; --heart-y: -52px;"></span>
+          <span class="mini-heart h2" style="--heart-x: -72px; --heart-y: -42px;"></span>
+          <span class="mini-heart h3" style="--heart-x: 8px; --heart-y: -84px;"></span>
+          <span class="mini-heart h4" style="--heart-x: -110px; --heart-y: -26px;"></span>
+          <span class="mini-heart h5" style="--heart-x: 62px; --heart-y: -54px;"></span>
+          <span class="mini-heart h6" style="--heart-x: -90px; --heart-y: -108px;"></span>
+          <span class="mini-heart h7" style="--heart-x: 26px; --heart-y: -126px;"></span>
+          <span class="mini-heart h8" style="--heart-x: 106px; --heart-y: -24px;"></span>
         </div>
       </section>
     </header>
@@ -708,7 +913,7 @@
               </div>
               <div class="detail-item">
                 <div class="detail-key">Theme</div>
-                <div class="detail-value">White and olive green accents with a modern floral mood</div>
+                <div class="detail-value">A joyful reception with family and loved ones</div>
               </div>
             </div>
           </article>
@@ -728,7 +933,7 @@
               <div class="timeline-time">10:30 AM</div>
               <div class="timeline-copy">
                 <strong>Wedding Ceremony</strong>
-                <span>Vows and wedding service at St Thomas Church, Thomattuchal.</span>
+                <span>Vows and wedding service at St Thomas Church, Thomattuchal, Wayanad, Kerala.</span>
               </div>
             </div>
             <div class="timeline-item">
@@ -741,7 +946,7 @@
             <div class="timeline-item">
               <div class="timeline-time">Reception</div>
               <div class="timeline-copy">
-                <strong>Gathering at Vaduvanchal</strong>
+                <strong>Gathering at Vaduvanchal,Wayanad,Kerala</strong>
                 <span>Reception celebration at Mar Thoma Church, Vaduvanchal.</span>
               </div>
             </div>
@@ -763,7 +968,15 @@
   <script>
     const weddingDate = new Date("2026-05-14T10:30:00+05:30");
     const countdownDays = document.getElementById("countdownDays");
+    const countdownDayNumber = document.getElementById("countdownDayNumber");
+    const countdownHourNumber = document.getElementById("countdownHourNumber");
+    const countdownMinuteNumber = document.getElementById("countdownMinuteNumber");
+    const countdownSecondNumber = document.getElementById("countdownSecondNumber");
     const countdownText = document.getElementById("countdownText");
+
+    function padCount(value) {
+      return String(value).padStart(2, "0");
+    }
 
     function updateCountdown() {
       const now = new Date();
@@ -771,20 +984,33 @@
 
       if (diff <= 0) {
         countdownDays.textContent = "Today";
+        countdownDayNumber.textContent = "00";
+        countdownHourNumber.textContent = "00";
+        countdownMinuteNumber.textContent = "00";
+        countdownSecondNumber.textContent = "00";
         countdownText.textContent = "The wedding day has arrived.";
         return;
       }
 
       const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
       const totalHours = Math.floor(diff / (1000 * 60 * 60));
+      const totalMinutes = Math.floor(diff / (1000 * 60));
+      const totalSeconds = Math.floor(diff / 1000);
       const hours = totalHours % 24;
+      const minutes = totalMinutes % 60;
+      const seconds = totalSeconds % 60;
 
       countdownDays.textContent = totalDays + " Days";
-      countdownText.textContent = hours + " hours left until the celebration begins.";
+      countdownDayNumber.textContent = padCount(totalDays);
+      countdownHourNumber.textContent = padCount(hours);
+      countdownMinuteNumber.textContent = padCount(minutes);
+      countdownSecondNumber.textContent = padCount(seconds);
+      countdownText.textContent =
+        hours + " hours, " + minutes + " minutes left until the celebration begins.";
     }
 
     updateCountdown();
-    setInterval(updateCountdown, 60000);
+    setInterval(updateCountdown, 1000);
 
     const observer = new IntersectionObserver(
       (entries) => {
