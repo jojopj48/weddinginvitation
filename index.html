@@ -184,7 +184,6 @@
       justify-content: space-between;
       gap: 2rem;
       min-width: 0;
-      position: relative;
     }
 
     .eyebrow {
@@ -284,14 +283,23 @@
       overflow: hidden;
     }
 
+    .heart-stage {
+      position: relative;
+      height: 180px;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
     .hero-hearts {
       position: absolute;
-      left: 31%;
-      bottom: 176px;
+      left: 50%;
+      top: 50%;
       width: 240px;
       height: 180px;
       pointer-events: none;
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
       z-index: 1;
     }
 
@@ -744,12 +752,15 @@
       }
 
       .hero-hearts {
-        left: 31%;
-        bottom: 176px;
+        left: 50%;
+        top: 50%;
         width: 190px;
         height: 150px;
-        transform: translateX(-50%) scale(0.86);
-        transform-origin: center bottom;
+        transform: translate(-50%, -50%) scale(0.86);
+      }
+
+      .heart-stage {
+        height: 140px;
       }
     }
   </style>
@@ -775,6 +786,20 @@
                 We joyfully invite you to celebrate our wedding ceremony and reception as we begin
                 a new chapter together in faith, love, and family.
               </p>
+            </div>
+
+            <div class="heart-stage" aria-hidden="true">
+              <div class="hero-hearts">
+                <span class="heart-core"></span>
+                <span class="mini-heart h1" style="--heart-x: -18px; --heart-y: -52px;"></span>
+                <span class="mini-heart h2" style="--heart-x: -72px; --heart-y: -42px;"></span>
+                <span class="mini-heart h3" style="--heart-x: 8px; --heart-y: -84px;"></span>
+                <span class="mini-heart h4" style="--heart-x: -110px; --heart-y: -26px;"></span>
+                <span class="mini-heart h5" style="--heart-x: 62px; --heart-y: -54px;"></span>
+                <span class="mini-heart h6" style="--heart-x: -90px; --heart-y: -108px;"></span>
+                <span class="mini-heart h7" style="--heart-x: 26px; --heart-y: -126px;"></span>
+                <span class="mini-heart h8" style="--heart-x: 106px; --heart-y: -24px;"></span>
+              </div>
             </div>
 
             <div class="fact-row">
@@ -830,17 +855,6 @@
             </p>
 
           </aside>
-        </div>
-        <div class="hero-hearts" aria-hidden="true">
-          <span class="heart-core"></span>
-          <span class="mini-heart h1" style="--heart-x: -18px; --heart-y: -52px;"></span>
-          <span class="mini-heart h2" style="--heart-x: -72px; --heart-y: -42px;"></span>
-          <span class="mini-heart h3" style="--heart-x: 8px; --heart-y: -84px;"></span>
-          <span class="mini-heart h4" style="--heart-x: -110px; --heart-y: -26px;"></span>
-          <span class="mini-heart h5" style="--heart-x: 62px; --heart-y: -54px;"></span>
-          <span class="mini-heart h6" style="--heart-x: -90px; --heart-y: -108px;"></span>
-          <span class="mini-heart h7" style="--heart-x: 26px; --heart-y: -126px;"></span>
-          <span class="mini-heart h8" style="--heart-x: 106px; --heart-y: -24px;"></span>
         </div>
       </section>
     </header>
