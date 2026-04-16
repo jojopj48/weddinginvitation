@@ -574,21 +574,28 @@
       align-items: center;
       gap: 10px;
       margin-top: 10px;
-      padding: 11px 16px;
-      border-radius: 999px;
-      background: rgba(102, 113, 79, 0.1);
-      color: var(--olive-deep);
-      font-size: 0.88rem;
+      padding: 13px 20px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(102, 113, 79, 0.97), rgba(73, 82, 56, 0.94));
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 12px 24px rgba(67, 78, 47, 0.18);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 1.08rem;
       font-weight: 600;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
       transition:
         transform 180ms ease,
-        background-color 180ms ease;
+        box-shadow 180ms ease,
+        filter 180ms ease;
     }
 
     .map-link:hover {
       transform: translateY(-1px);
-      background: rgba(102, 113, 79, 0.16);
+      box-shadow: 0 16px 28px rgba(67, 78, 47, 0.24);
+      filter: brightness(1.04);
     }
 
     .detail-item {
