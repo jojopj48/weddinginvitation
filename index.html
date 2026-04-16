@@ -819,7 +819,16 @@
 
             <div class="heart-stage" aria-hidden="true">
               <div class="love-video-frame">
-                <video class="love-video" autoplay muted loop playsinline preload="auto">
+                <video
+                  id="loveVideo"
+                  class="love-video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  webkit-playsinline="true"
+                  preload="auto"
+                >
                   <source src="assets/love-video.mp4" type="video/mp4">
                 </video>
               </div>
@@ -1022,6 +1031,7 @@
     const countdownMinuteNumber = document.getElementById("countdownMinuteNumber");
     const countdownSecondNumber = document.getElementById("countdownSecondNumber");
     const countdownText = document.getElementById("countdownText");
+    const loveVideo = document.getElementById("loveVideo");
 
     function padCount(value) {
       return String(value).padStart(2, "0");
@@ -1061,11 +1071,28 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
+    function attemptVideoPlayback() {
+      if (!loveVideo) {
+        return;
+      }
+
+      loveVideo.muted = true;
+      loveVideo.defaultMuted = true;
+
+      const playPromise = loveVideo.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {});
+      }
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
+            if (entry.target.contains(loveVideo)) {
+              attemptVideoPlayback();
+            }
             observer.unobserve(entry.target);
           }
         });
@@ -1074,6 +1101,21 @@
     );
 
     document.querySelectorAll("[data-reveal]").forEach((element) => observer.observe(element));
+
+    if (loveVideo) {
+      ["loadedmetadata", "canplay", "visibilitychange"].forEach((eventName) => {
+        document.addEventListener(eventName, attemptVideoPlayback, { passive: true });
+      });
+
+      ["touchstart", "touchend", "click"].forEach((eventName) => {
+        document.addEventListener(eventName, attemptVideoPlayback, {
+          passive: true,
+          once: true
+        });
+      });
+
+      attemptVideoPlayback();
+    }
   </script>
 </body>
 </html>
