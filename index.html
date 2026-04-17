@@ -459,6 +459,52 @@
       text-transform: lowercase;
     }
 
+    .music-toggle {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 120;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 248, 246, 0.88);
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .music-toggle:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .music-toggle:focus-visible {
+      outline: 3px solid rgba(255, 213, 223, 0.9);
+      outline-offset: 4px;
+    }
+
+    .music-toggle.is-active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    @media (max-width: 640px) {
+      .music-toggle {
+        right: 50%;
+        bottom: 14px;
+        transform: translateX(50%);
+        font-size: 0.72rem;
+      }
+
+      .music-toggle:hover {
+        transform: translateX(50%) translateY(-1px);
+      }
+    }
+
     .reveal-content {
       width: min(100%, 1120px);
       margin: 0 auto;
@@ -1113,6 +1159,9 @@
               </span>
             </button>
             <div class="button-note">tap here to reveal</div>
+            <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">
+              Background music off
+            </button>
           </div>
         </div>
 
@@ -1175,11 +1224,11 @@
             <div class="memories-track" aria-label="Memory gallery and location details">
               <article class="memory-card" data-frame="velvet" data-reveal>
                 <div class="memory-frame">
-                  <img class="memory-photo" src="assets/IMG_1194.jpg" alt="Jojo and Nayana standing together in the forest">
+                  <img class="memory-photo" src="assets/70a85e37-3664-4253-98d3-815469130826.jpeg" alt="Jojo and Nayana standing together with a cake">
                   <div class="memory-caption">
                     <div class="memory-eyebrow">Memory one</div>
-                    <div class="memory-title">A forest portrait</div>
-                    <div class="memory-copy">A calm moment together, framed by trees and soft daylight.</div>
+                    <div class="memory-title">A joyful welcome</div>
+                    <div class="memory-copy">The opening memory shows a bright indoor moment with a cake and smiles.</div>
                   </div>
                 </div>
               </article>
@@ -1304,6 +1353,7 @@
     const revealButton = document.getElementById("revealButton");
     const revealContent = document.getElementById("revealContent");
     const revealBurst = document.getElementById("revealBurst");
+    const musicToggle = document.getElementById("musicToggle");
 
     const countdownDays = document.getElementById("countdownDays");
     const countdownHours = document.getElementById("countdownHours");
@@ -1312,9 +1362,165 @@
     const countdownNote = document.getElementById("countdownNote");
 
     const weddingDate = new Date("2026-05-14T10:30:00+05:30");
+    let audioContext = null;
+    let masterGain = null;
+    let musicTimer = null;
+    let musicEnabled = false;
+    let nextNoteTime = 0;
 
     function pad(value) {
       return String(value).padStart(2, "0");
+    }
+
+    function createAudioContext() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) {
+        return null;
+      }
+
+      if (!audioContext) {
+        audioContext = new AudioContextClass();
+        masterGain = audioContext.createGain();
+        masterGain.gain.value = 0.06;
+        masterGain.connect(audioContext.destination);
+      }
+
+      return audioContext;
+    }
+
+    function stopMusic() {
+      if (musicTimer) {
+        clearInterval(musicTimer);
+        musicTimer = null;
+      }
+
+      musicEnabled = false;
+
+      if (masterGain && audioContext) {
+        masterGain.gain.setTargetAtTime(0.0001, audioContext.currentTime, 0.04);
+      }
+
+      if (musicToggle) {
+        musicToggle.textContent = "Background music off";
+        musicToggle.classList.remove("is-active");
+        musicToggle.setAttribute("aria-pressed", "false");
+      }
+    }
+
+    function playPluck(time, frequency) {
+      if (!audioContext || !masterGain) {
+        return;
+      }
+
+      const osc = audioContext.createOscillator();
+      const filter = audioContext.createBiquadFilter();
+      const gain = audioContext.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(frequency, time);
+      osc.frequency.exponentialRampToValueAtTime(frequency * 0.995, time + 0.35);
+
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(1400, time);
+      filter.Q.value = 0.8;
+
+      gain.gain.setValueAtTime(0.0001, time);
+      gain.gain.exponentialRampToValueAtTime(0.075, time + 0.018);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.48);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+      osc.start(time);
+      osc.stop(time + 0.52);
+    }
+
+    function playFluteTone(time, frequency, duration) {
+      if (!audioContext || !masterGain) {
+        return;
+      }
+
+      const osc = audioContext.createOscillator();
+      const filter = audioContext.createBiquadFilter();
+      const gain = audioContext.createGain();
+      const lfo = audioContext.createOscillator();
+      const lfoGain = audioContext.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(frequency, time);
+
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(frequency * 1.15, time);
+      filter.Q.value = 4.5;
+
+      lfo.type = "sine";
+      lfo.frequency.value = 5.2;
+      lfoGain.gain.value = frequency * 0.012;
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+
+      gain.gain.setValueAtTime(0.0001, time);
+      gain.gain.exponentialRampToValueAtTime(0.05, time + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+      lfo.start(time);
+      osc.start(time);
+      osc.stop(time + duration + 0.05);
+      lfo.stop(time + duration + 0.05);
+    }
+
+    function scheduleMusicStep() {
+      if (!audioContext || !musicEnabled) {
+        return;
+      }
+
+      const beat = 0.72;
+      const leadNotes = [659.25, 587.33, 523.25, 587.33, 659.25, 659.25, 659.25, 587.33];
+      const harmonyNotes = [392, 440, 349.23, 392];
+      const now = audioContext.currentTime;
+
+      if (nextNoteTime < now) {
+        nextNoteTime = now + 0.04;
+      }
+
+      for (let i = 0; i < 2; i += 1) {
+        const step = nextNoteTime + i * beat;
+        const lead = leadNotes[(Math.floor(step / beat) + i) % leadNotes.length];
+        const bass = harmonyNotes[(Math.floor(step / (beat * 2)) + i) % harmonyNotes.length];
+
+        playPluck(step, bass);
+        playFluteTone(step + 0.03, lead, 0.62);
+        playFluteTone(step + 0.18, lead * 1.25, 0.42);
+      }
+
+      nextNoteTime += beat * 2;
+    }
+
+    function startMusic() {
+      const context = createAudioContext();
+      if (!context || musicEnabled) {
+        return;
+      }
+
+      context.resume().catch(() => {});
+      if (masterGain) {
+        masterGain.gain.cancelScheduledValues(context.currentTime);
+        masterGain.gain.setValueAtTime(0.05, context.currentTime);
+      }
+      musicEnabled = true;
+      nextNoteTime = context.currentTime + 0.08;
+
+      if (musicToggle) {
+        musicToggle.textContent = "Background music on";
+        musicToggle.classList.add("is-active");
+        musicToggle.setAttribute("aria-pressed", "true");
+      }
+
+      scheduleMusicStep();
+      musicTimer = window.setInterval(scheduleMusicStep, 1150);
     }
 
     function updateCountdown() {
@@ -1371,6 +1577,7 @@
       heroSpot.classList.add("is-hidden");
       revealContent.setAttribute("aria-hidden", "false");
       emitPetalBurst();
+      startMusic();
 
       window.setTimeout(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1378,6 +1585,16 @@
     }
 
     revealButton.addEventListener("click", revealInvitation);
+
+    if (musicToggle) {
+      musicToggle.addEventListener("click", () => {
+        if (musicEnabled) {
+          stopMusic();
+        } else {
+          startMusic();
+        }
+      });
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
