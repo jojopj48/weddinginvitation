@@ -1177,7 +1177,6 @@
                 <div class="memory-frame">
                   <img class="memory-photo" src="assets/70a85e37-3664-4253-98d3-815469130826.jpeg" alt="Jojo and Nayana standing together with a cake" loading="eager" fetchpriority="high" decoding="async">
                   <div class="memory-caption">
-                    <div class="memory-eyebrow">Memory one</div>
                     <div class="memory-title">A joyful welcome</div>
                     <div class="memory-copy">The opening memory shows a bright indoor moment with a cake and smiles.</div>
                   </div>
@@ -1188,7 +1187,6 @@
                 <div class="memory-frame">
                   <img class="memory-photo" src="assets/b4b42e83-f034-4621-a1b2-cd77508f980d.jpeg" alt="Nayana in a pink sari" loading="eager" fetchpriority="high" decoding="async">
                   <div class="memory-caption">
-                    <div class="memory-eyebrow">Memory two</div>
                     <div class="memory-title">Bright and graceful</div>
                     <div class="memory-copy">A portrait framed in gold tones and warm celebration light.</div>
                   </div>
@@ -1199,7 +1197,6 @@
                 <div class="memory-frame">
                   <img class="memory-photo" src="assets/IMG_0703.jpeg" alt="The couple standing together indoors" loading="lazy" decoding="async">
                   <div class="memory-caption">
-                    <div class="memory-eyebrow">Memory three</div>
                     <div class="memory-title">Side by side</div>
                     <div class="memory-copy">A framed memory from an indoor moment with soft light and calm colors.</div>
                   </div>
@@ -1210,7 +1207,6 @@
                 <div class="memory-frame">
                   <img class="memory-photo" src="assets/21b4b4dd-8488-44fa-988f-e83323792658.jpeg" alt="The couple standing outdoors among trees" loading="lazy" decoding="async">
                   <div class="memory-caption">
-                    <div class="memory-eyebrow">Memory four</div>
                     <div class="memory-title">A sunlit walk</div>
                     <div class="memory-copy">Natural greenery, a pastel frame, and a moment that feels alive.</div>
                   </div>
@@ -1221,7 +1217,6 @@
                 <div class="memory-frame">
                   <img class="memory-photo" src="assets/IMG_2314.jpeg" alt="A close selfie of the couple outdoors" loading="lazy" decoding="async">
                   <div class="memory-caption">
-                    <div class="memory-eyebrow">Memory five</div>
                     <div class="memory-title">Close and bright</div>
                     <div class="memory-copy">A more intimate frame with a softer edge and a tender mood.</div>
                   </div>
@@ -1232,7 +1227,6 @@
                 <div class="memory-frame">
                   <img class="memory-photo" src="assets/IMG_4386.jpeg" alt="The couple on a hillside path" loading="lazy" decoding="async">
                   <div class="memory-caption">
-                    <div class="memory-eyebrow">Memory six</div>
                     <div class="memory-title">A journey together</div>
                     <div class="memory-copy">The final photo memory before the location card begins.</div>
                   </div>
@@ -1370,6 +1364,8 @@
       page.classList.add("is-revealed");
       heroSpot.classList.add("is-hidden");
       revealContent.setAttribute("aria-hidden", "false");
+      document.querySelectorAll("[data-reveal]").forEach((el) => el.classList.add("is-visible"));
+      observer.disconnect();
       emitPetalBurst();
 
       window.setTimeout(() => {
